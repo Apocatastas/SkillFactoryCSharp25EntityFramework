@@ -12,11 +12,8 @@ namespace SkillFactoryCSharp25EntityFramework
         {
             using (var db = new AppContext())
             {
-                // Использование EF
-                var user1 = new User { Name = "Arthur", Role = "Admin" };
-                var user2 = new User { Name = "Klim", Role = "User" };
-                db.Users.Add(user1);
-                db.Users.Add(user2);
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
                 db.SaveChanges();
             }
         }

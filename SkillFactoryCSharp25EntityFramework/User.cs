@@ -12,5 +12,6 @@ namespace SkillFactoryCSharp25EntityFramework
         public string Name { get; set; }
         public string? Email { get; set; }
         public string Role { get; set; }
+        public List<Book> BooksBorrowed { get; set; }
     }
 }

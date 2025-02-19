@@ -12,7 +12,7 @@ namespace SkillFactoryCSharp25EntityFramework
     {
         // Объекты таблицы Users
         public DbSet<User> Users { get; set; }
-
+        public DbSet<Book> Books { get; set; }
         public AppContext()
         {
             Database.EnsureCreated();
