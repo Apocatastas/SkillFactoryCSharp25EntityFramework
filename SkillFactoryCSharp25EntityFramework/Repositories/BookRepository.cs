@@ -158,5 +158,14 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
             return query.ToList();
         }
 
+        public void PrintBooksList(List<Book> books)
+        {
+            int iterator = 1;
+            foreach (Book item in books)
+            {
+                Console.WriteLine(item.ToString());
+                iterator++;
+            };
+        }
     }
 }

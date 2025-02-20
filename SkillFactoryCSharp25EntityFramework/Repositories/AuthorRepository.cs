@@ -68,6 +68,7 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
         /// </summary>
         public int GetBooksCountByAuthor(int authorId)
         {
+            if (GetAuthorById(authorId).Books is null) return 0;
             return GetAuthorById(authorId).Books.Count();
         }
     }

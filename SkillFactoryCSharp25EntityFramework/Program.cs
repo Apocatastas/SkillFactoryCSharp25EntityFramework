@@ -59,7 +59,7 @@ namespace SkillFactoryCSharp25EntityFramework
             Console.WriteLine("Initial filling complete, starting initial CRUD operations");
         }
         static void CRUDDemo(AppContext db)
-        { 
+        {
             //теперь присвоим книжкам авторов, заодно продемонстрируем CRUD:
             // - выберем все объекты сразу
             // - выберем объекты по идентификатору
@@ -72,6 +72,7 @@ namespace SkillFactoryCSharp25EntityFramework
             BookRepository bookRepository = new BookRepository(db);
             GenreRepository genreRepository = new GenreRepository(db);
             UserRepository usersRepository = new UserRepository(db);
+
 
             Console.WriteLine("Let's see all our authors:");
             var authorsList = authorRepository.GetAllAuthors();
@@ -119,16 +120,38 @@ namespace SkillFactoryCSharp25EntityFramework
 
         static void OperationsDemo(AppContext db)
         {
+            AuthorRepository authorRepository = new AuthorRepository(db);
+            BookRepository bookRepository = new BookRepository(db);
+            GenreRepository genreRepository = new GenreRepository(db);
+            UserRepository usersRepository = new UserRepository(db);
+
             //Здесь продемонстрируем девять заданий из 25.5.4
             //1. Получать список книг определенного жанра и вышедших между определенными годами.
+            Console.WriteLine("\n1. Here's books of genre #2 issued between 1994 and 2025");
+            bookRepository.PrintBooksList(bookRepository.GetBooksByGenreIssueDate(2, 1994, 2025));
             //2. Получать количество книг определенного автора в библиотеке.
+            Console.WriteLine("\n2. Author #1 writed {0} books", authorRepository.GetBooksCountByAuthor(0));
             //3. Получать количество книг определенного жанра в библиотеке.
+            Console.WriteLine("\n3. Genre #4 contains {0} books", bookRepository.GetBooksCountByGenre(4));
             //4. Получать булевый флаг о том, есть ли книга определенного автора и с определенным названием в библиотеке.
+            Console.WriteLine("\n4. Is there a book of {0}, named {1}? Answer: {2}", authorRepository.GetAuthorById(4).ToString() ,bookRepository.GetBook(2).Title, bookRepository.CheckBook(authorRepository.GetAuthorById(4).LastName, bookRepository.GetBook(2).Title));
             //5. Получать булевый флаг о том, есть ли определенная книга на руках у пользователя.
+            Console.WriteLine("\n5. Is the book #5 borrowed? Answer: " + bookRepository.IsBookBorrowed(5).ToString());
             //6. Получать количество книг на руках у пользователя.
+            Console.WriteLine("\n6. How many books did we assign to user#3? Answer: " + usersRepository.GetUserBorrowedBooksCount(3));
             //7. Получение последней вышедшей книги.
+            Console.WriteLine("\n7. The newest book is: " + bookRepository.GetNewestBook().ToString());
             //8. Получение списка всех книг, отсортированного в алфавитном порядке по названию.
+            Console.WriteLine("\n8. Now we got our books sorted by title alphabetically:");
+            bookRepository.PrintBooksList(bookRepository.GetAllBooksOrderedByTitle());
             //9. Получение списка всех книг, отсортированного в порядке убывания года их выхода.
+            Console.WriteLine("\n9. Now we got our books sorted by issue date descending:");
+            bookRepository.PrintBooksList(bookRepository.GetAllBooksOrderedByYearFromNewest());
+
+
+
+
+
         }
 
     }
