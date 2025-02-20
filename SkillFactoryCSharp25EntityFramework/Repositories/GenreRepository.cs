@@ -33,18 +33,32 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
             return DbContext.SaveChanges();
         }
 
+        public void PrintGenresList()
+        {
+            int iterator = 1;
+            var genresList = GetAllGenres();
+            foreach (Genre item in genresList)
+            {
+                Console.WriteLine("N{0} - {1}", iterator, item.Name);
+                iterator++;
+            };
+        }
+
         public int DeleteGenre(int id)
         {
             int result;
             using (var transactionContext = DbContext.Database.BeginTransaction())
             {
                 Genre genreToDelete = GetGenreById(id);
-                foreach (Book book in genreToDelete.BooksOfGenre)
+                if (genreToDelete.BooksOfGenre is not null)
                 {
-                    book.GenreId = null;
-                    book.Genre = null;
+                    foreach (Book book in genreToDelete.BooksOfGenre)
+                    {
+                        book.GenreId = null;
+                        book.Genre = null;
+                    }
+                    genreToDelete.BooksOfGenre.Clear();
                 }
-                genreToDelete.BooksOfGenre.Clear();
                 DbContext.Genres.Remove(genreToDelete);
                 result = DbContext.SaveChanges();
                 transactionContext.Commit();

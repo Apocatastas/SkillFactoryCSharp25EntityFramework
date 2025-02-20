@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,6 +51,20 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
                         .BooksBorrowed.Remove(bookToDelete);
                 }
                 DbContext.Books.Remove(bookToDelete);
+                result = DbContext.SaveChanges();
+                transactionContext.Commit();
+            }
+            return result;
+        }
+
+        public int SetAuthor(int bookID, Author author)
+        {
+            int result;
+            using (var transactionContext = DbContext.Database.BeginTransaction())
+            {
+                Book bookToUpdate = GetBook(bookID);
+                if (bookToUpdate.Authors is null) { bookToUpdate.Authors = new List<Author>(); }
+                bookToUpdate.Authors.Add(author);
                 result = DbContext.SaveChanges();
                 transactionContext.Commit();
             }

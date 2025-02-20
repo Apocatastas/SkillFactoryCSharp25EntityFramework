@@ -48,6 +48,7 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
         {
             User userToUpdate = GetUser(userId);
             Book bookToUpdate = DbContext.Books.SingleOrDefault(b => b.Id == bookId);
+            if (userToUpdate.BooksBorrowed is null) { userToUpdate.BooksBorrowed = new List<Book>(); }
             userToUpdate.BooksBorrowed.Add(bookToUpdate);
             return DbContext.SaveChanges();
         }
@@ -85,11 +86,24 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
             return result;
         }
 
+        public void PrintUsersList()
+        {
+            int iterator = 1;
+            var usersList = GetAllUsers();
+            foreach (User item in usersList)
+            {
+                Console.WriteLine("N{0} - {1}", iterator, item.Name);
+                iterator++;
+            }
+            ;
+        }
+
         /// <summary>
         /// 6. Получение количества книг на руках у пользователя.
         /// </summary>
         public int GetUserBorrowedBooksCount(int userId)
         {
+            if (GetUser(userId).BooksBorrowed is null) return 0;
             return GetUser(userId).BooksBorrowed.Count();
         }
     }
