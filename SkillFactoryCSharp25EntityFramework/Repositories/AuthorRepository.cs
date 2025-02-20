@@ -63,5 +63,12 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
             }
             return result;
         }
+        /// <summary>
+        /// 2. Получение количества книг определенного автора в библиотеке
+        /// </summary>
+        public int GetBooksCountByAuthor(int authorId)
+        {
+            return GetAuthorById(authorId).Books.Count();
+        }
     }
 }

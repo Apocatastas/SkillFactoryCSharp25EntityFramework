@@ -84,5 +84,13 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
             }
             return result;
         }
+
+        /// <summary>
+        /// 6. Получение количества книг на руках у пользователя.
+        /// </summary>
+        public int GetUserBorrowedBooksCount(int userId)
+        {
+            return GetUser(userId).BooksBorrowed.Count();
+        }
     }
 }
