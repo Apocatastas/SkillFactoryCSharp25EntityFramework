@@ -48,7 +48,6 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
         {
             User userToUpdate = GetUser(userId);
             Book bookToUpdate = DbContext.Books.SingleOrDefault(b => b.Id == bookId);
-            if (userToUpdate.BooksBorrowed is null) { userToUpdate.BooksBorrowed = new List<Book>(); }
             userToUpdate.BooksBorrowed.Add(bookToUpdate);
             return DbContext.SaveChanges();
         }
@@ -71,14 +70,13 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
             using (var transactionContext = DbContext.Database.BeginTransaction())
             {
                 User userToDelete = GetUser(userId);
-                if (userToDelete.BooksBorrowed is not null)
-                {
+                
                     foreach (Book book in userToDelete.BooksBorrowed)
                     {
                         book.UserId = null;
                     }
                     userToDelete.BooksBorrowed.Clear();
-                }
+
                 DbContext.Users.Remove(userToDelete);
                 result = DbContext.SaveChanges();
                 transactionContext.Commit();
@@ -103,7 +101,6 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
         /// </summary>
         public int GetUserBorrowedBooksCount(int userId)
         {
-            if (GetUser(userId).BooksBorrowed is null) return 0;
             return GetUser(userId).BooksBorrowed.Count();
         }
     }

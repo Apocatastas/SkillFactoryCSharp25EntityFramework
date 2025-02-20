@@ -71,6 +71,21 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
             return result;
         }
 
+        public int SetGenre(int bookID, Genre genre)
+        {
+            int result;
+            using (var transactionContext = DbContext.Database.BeginTransaction())
+            {
+                Book bookToUpdate = GetBook(bookID);
+               
+                bookToUpdate.Genre = genre.Name;
+                bookToUpdate.GenreId = genre.Id;
+                result = DbContext.SaveChanges();
+                transactionContext.Commit();
+            }
+            return result;
+        }
+
         /// <summary>
         /// Обновление года выпуска книги
         /// </summary>

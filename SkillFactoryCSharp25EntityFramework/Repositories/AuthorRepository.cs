@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -68,7 +69,6 @@ namespace SkillFactoryCSharp25EntityFramework.Repositories
         /// </summary>
         public int GetBooksCountByAuthor(int authorId)
         {
-            if (GetAuthorById(authorId).Books is null) return 0;
             return GetAuthorById(authorId).Books.Count();
         }
     }

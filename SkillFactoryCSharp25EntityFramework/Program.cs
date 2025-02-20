@@ -20,24 +20,26 @@ namespace SkillFactoryCSharp25EntityFramework
                 CRUDDemo(db);
                 OperationsDemo(db);
                 db.SaveChanges();
+                Console.ReadKey();
             }
         }
 
         static void FillTheBase(AppContext db)
         {
+            
             db.Authors.AddRange(
-                                new Author { FirstName = "Фёдор", LastName = "Двинятин" },
-                                new Author { FirstName = "Ланочка", LastName = "Дельрей" },
-                                new Author { FirstName = "Вазипупий", LastName = "Козлов" },
-                                new Author { FirstName = "Элджей", LastName = "Моргенштерн" },
-                                new Author { FirstName = "Джон", LastName = "Ромеро" }
+                                new Author { FirstName = "Фёдор", LastName = "Двинятин", Books = new List<Book>() },
+                                new Author { FirstName = "Ланочка", LastName = "Дельрей", Books = new List<Book>() },
+                                new Author { FirstName = "Вазипупий", LastName = "Козлов", Books = new List<Book>() },
+                                new Author { FirstName = "Элджей", LastName = "Моргенштерн", Books = new List<Book>() },
+                                new Author { FirstName = "Джон", LastName = "Ромеро", Books = new List<Book>() }
                                );
             db.Users.AddRange(
-                                new User { Name = "Nabibat0r", Email = "serega@nagibator.ru" },
-                                new User { Name = "RakNaM1de", Email = "rack@rachok.com" },
-                                new User { Name = "S1lvana", Email = "silvana@wc.com" },
-                                new User { Name = "HexxMagister", Email = "hexx@mag.ru" },
-                                new User { Name = "Detroit", Email = "detroit@become.hu" }
+                                new User { Name = "Nabibat0r", Email = "serega@nagibator.ru", BooksBorrowed = new List<Book>() },
+                                new User { Name = "RakNaM1de", Email = "rack@rachok.com", BooksBorrowed = new List<Book>() },
+                                new User { Name = "S1lvana", Email = "silvana@wc.com", BooksBorrowed = new List<Book>() },
+                                new User { Name = "HexxMagister", Email = "hexx@mag.ru", BooksBorrowed = new List<Book>() },
+                                new User { Name = "Detroit", Email = "detroit@become.hu", BooksBorrowed = new List<Book>() }
                              );
             db.Genres.AddRange(
                                 new Genre { Name = "Сопливая романтика" },
@@ -47,13 +49,13 @@ namespace SkillFactoryCSharp25EntityFramework
                                 new Genre { Name = "Ужасей" }
                               );
             db.Books.AddRange(
-                                new Book { Title = "Как Петька и Василий Иваныч таз искали", YearOfPublishing = 1970, Genre = "Сопливая романтика" },
-                                new Book { Title = "Сто лет выполнения тасков по Entity Framework", YearOfPublishing = 1666, Genre = "Фанфики для взрослых" },
-                                new Book { Title = "Матерные частушки для малышей", YearOfPublishing = 1984, Genre = "Научпоп" },
-                                new Book { Title = "Ночной позор", YearOfPublishing = 2020, Genre = "Science fiction" },
-                                new Book { Title = "Транспофигизм Inc.", YearOfPublishing = 2024, Genre = "Ужасей" },
-                                new Book { Title = "Властелин больших бетонных колец", YearOfPublishing = 1988, Genre = "Ужасей" },
-                                new Book { Title = "Копание в колодце разума в поисках названий книг", YearOfPublishing = 2022, Genre = "Science fiction" }
+                                new Book { Title = "Как Петька и Василий Иваныч таз искали", YearOfPublishing = 1970, Genre = "Сопливая романтика", Authors = new List<Author>() },
+                                new Book { Title = "Сто лет выполнения тасков по Entity Framework", YearOfPublishing = 1666, Genre = "Фанфики для взрослых", Authors = new List<Author>() },
+                                new Book { Title = "Матерные частушки для малышей", YearOfPublishing = 1984, Genre = "Научпоп", Authors = new List<Author>() },
+                                new Book { Title = "Ночной позор", YearOfPublishing = 2020, Genre = "Science fiction", Authors = new List<Author>() },
+                                new Book { Title = "Транспофигизм Inc.", YearOfPublishing = 2024, Genre = "Ужасей", Authors = new List<Author>() },
+                                new Book { Title = "Властелин больших бетонных колец", YearOfPublishing = 1988, Genre = "Ужасей", Authors = new List<Author>() },
+                                new Book { Title = "Копание в колодце разума в поисках названий книг", YearOfPublishing = 2022, Genre = "Science fiction", Authors = new List<Author>() }
                              );
             db.SaveChanges();
             Console.WriteLine("Initial filling complete, starting initial CRUD operations");
@@ -84,13 +86,15 @@ namespace SkillFactoryCSharp25EntityFramework
                 }
             Console.WriteLine("Let's see third of our authors: " + authorRepository.GetAuthorById(3).ToString());
             Console.WriteLine("/================================/");
-            Console.WriteLine("Now we are ready to assign some authors to our books!");
+            Console.WriteLine("Now we are ready to assign some authors and genres to our books!");
             var rand = new Random();
             foreach (Book item in bookRepository.GetAllBooks())
                 {
                 int random_id = rand.Next(1, authorRepository.GetAllAuthors().Count);
                 bookRepository.SetAuthor(item.Id, authorRepository.GetAuthorById(random_id));
-                Console.WriteLine("N{0} - {1}", item.Id, bookRepository.GetBook(item.Id).ToString());
+                random_id = rand.Next(1, genreRepository.GetAllGenres().Count);
+                bookRepository.SetGenre(item.Id, genreRepository.GetGenreById(random_id));
+                Console.WriteLine("N{0} - {1} (жанр {2})", item.Id, bookRepository.GetBook(item.Id).ToString(), bookRepository.GetBook(item.Id).Genre);
                 }
             Console.WriteLine("/================================/");
             Console.WriteLine("Let's add a new genre! But first, here's our current genres");
@@ -130,7 +134,7 @@ namespace SkillFactoryCSharp25EntityFramework
             Console.WriteLine("\n1. Here's books of genre #2 issued between 1994 and 2025");
             bookRepository.PrintBooksList(bookRepository.GetBooksByGenreIssueDate(2, 1994, 2025));
             //2. Получать количество книг определенного автора в библиотеке.
-            Console.WriteLine("\n2. Author #1 writed {0} books", authorRepository.GetBooksCountByAuthor(0));
+            Console.WriteLine("\n2. Author #1 writed {0} books", authorRepository.GetBooksCountByAuthor(1));
             //3. Получать количество книг определенного жанра в библиотеке.
             Console.WriteLine("\n3. Genre #4 contains {0} books", bookRepository.GetBooksCountByGenre(4));
             //4. Получать булевый флаг о том, есть ли книга определенного автора и с определенным названием в библиотеке.
